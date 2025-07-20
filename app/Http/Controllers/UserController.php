@@ -57,16 +57,19 @@ class UserController extends Controller
     /**
      * Display the specified user
      */
-    public function show(User $user)
+    public function show($id)
     {
+        $user = User::findOrFail($id);
         return response()->json($user);
     }
 
     /**
      * Update the specified user
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
+        $user = User::findOrFail($id);
+        
         $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'email' => [
@@ -95,8 +98,9 @@ class UserController extends Controller
     /**
      * Remove the specified user
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
+        $user = User::findOrFail($id);
         $user->delete();
 
         return response()->json([
