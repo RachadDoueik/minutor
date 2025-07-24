@@ -21,5 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Admin-only routes (user management)
     Route::middleware('admin')->group(function () {
         Route::apiResource('users', UserController::class);
+        Route::put('users/{id}/lock', [UserController::class, 'lockUser']);
+        Route::put('users/{id}/unlock', [UserController::class, 'unlockUser']);
     });
 });

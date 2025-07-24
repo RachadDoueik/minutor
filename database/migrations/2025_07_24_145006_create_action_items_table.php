@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -13,10 +14,12 @@ return new class extends Migration {
         Schema::create('action_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('mom_entry_id')->constrained()->onDelete('cascade');
-            $table->foreignId('assigned_to')->constrained('users')->onDelete('cascade');
-            $table->string('description');
+            $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null');
+            $table->string('type'); // task, decision, follow-up, etc.
+            $table->text('description');
             $table->date('due_date')->nullable();
-            $table->enum('status', ['open', 'in progress', 'done'])->default('open');
+            $table->enum('status', ['open', 'in_progress', 'completed', 'cancelled'])->default('open');
+            $table->string('file_path')->nullable(); // for attachments
             $table->timestamps();
         });
     }

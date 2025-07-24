@@ -4,14 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MomEntry extends Model
+class Agenda extends Model
 {
     protected $fillable = [
         'meeting_id',
         'title',
-        'notes',
-        'summary',
-        'file_path'
+        'description'
     ];
 
     public function meeting()
@@ -19,8 +17,8 @@ class MomEntry extends Model
         return $this->belongsTo(Meeting::class);
     }
 
-    public function actionItems()
+    public function topics()
     {
-        return $this->hasMany(ActionItem::class);
+        return $this->hasMany(AgendaTopic::class)->orderBy('order');
     }
 }

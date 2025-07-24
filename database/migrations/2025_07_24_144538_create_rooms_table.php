@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -15,7 +16,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('location');
             $table->integer('capacity');
-            $table->json('features')->nullable(); // e.g., projector, TV, whiteboard
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

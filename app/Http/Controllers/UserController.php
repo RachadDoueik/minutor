@@ -42,6 +42,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
             'is_admin' => 'sometimes|boolean',
+            'is_active' => 'sometimes|boolean',
         ]);
 
         $user = User::create([
@@ -49,6 +50,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'is_admin' => $request->boolean('is_admin', false),
+            'is_active' => $request->boolean('is_active', true),
         ]);
 
         return response()->json($user, 201);
@@ -82,9 +84,10 @@ class UserController extends Controller
             ],
             'password' => 'sometimes|nullable|string|min:8',
             'is_admin' => 'sometimes|boolean',
+            'is_active' => 'sometimes|boolean',
         ]);
 
-        $updateData = $request->only(['name', 'email', 'is_admin']);
+        $updateData = $request->only(['name', 'email', 'is_admin', 'is_active']);
 
         if ($request->filled('password')) {
             $updateData['password'] = Hash::make($request->password);
@@ -164,6 +167,34 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'Password updated successfully'
+        ]);
+    }
+
+    /**
+     * Lock a user (set is_active to false)
+     */
+    public function lockUser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->update(['is_active' => false]);
+
+        return response()->json([
+            'message' => 'User locked successfully',
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * Unlock a user (set is_active to true)
+     */
+    public function unlockUser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->update(['is_active' => true]);
+
+        return response()->json([
+            'message' => 'User unlocked successfully',
+            'user' => $user
         ]);
     }
 }

@@ -23,6 +23,15 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+        
+        // Check if user is active (not locked)
+        if (!$user->is_active) {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => ['Your account has been locked. Please contact an administrator.'],
+            ]);
+        }
+
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([

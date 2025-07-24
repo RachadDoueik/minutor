@@ -3,12 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Booking;
 
 class Room extends Model
 {
-    public function bookings()
+    protected $fillable = [
+        'name',
+        'location',
+        'capacity',
+        'description'
+    ];
+
+    public function features()
     {
-        return $this->hasMany(Booking::class);
+        return $this->belongsToMany(Feature::class);
+    }
+
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
     }
 }

@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'is_active',
     ];
 
     /**
@@ -46,6 +47,33 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'is_active' => 'boolean',
         ];
+    }
+
+    // Relationships
+    public function scheduledMeetings()
+    {
+        return $this->hasMany(Meeting::class, 'scheduled_by');
+    }
+
+    public function attendingMeetings()
+    {
+        return $this->belongsToMany(Meeting::class)->withPivot('status')->withTimestamps();
+    }
+
+    public function agendaTopics()
+    {
+        return $this->hasMany(AgendaTopic::class, 'owner_id');
+    }
+
+    public function actionItems()
+    {
+        return $this->hasMany(ActionItem::class, 'assigned_to');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 }
