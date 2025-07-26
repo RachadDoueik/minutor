@@ -8,8 +8,7 @@ class Feature extends Model
 {
     protected $fillable = [
         'name',
-        'slug',
-        'description'
+        'slug'
     ];
 
     public function rooms()
