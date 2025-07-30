@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\FeatureController;
+use App\Http\Controllers\MeetingController;
 
 // Authentication routes (no middleware required)
 Route::post('auth/login', [AuthController::class, 'login']);
@@ -24,6 +25,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('rooms', RoomController::class)->only(['index', 'show']);
     Route::apiResource('features', FeatureController::class)->only(['index', 'show']);
     Route::get('rooms/available', [RoomController::class, 'available']);
+    
+    // Meeting routes (authenticated users)
+    Route::get('meetings/my', [MeetingController::class, 'myMeetings']);
+    Route::get('meetings/upcoming', [MeetingController::class, 'upcoming']);
+    Route::get('meetings/past', [MeetingController::class, 'past']);
+    Route::post('meetings/{id}/attendees', [MeetingController::class, 'addAttendees']);
+    Route::delete('meetings/{id}/attendees', [MeetingController::class, 'removeAttendees']);
+    Route::patch('meetings/{id}/status', [MeetingController::class, 'updateStatus']);
+    Route::apiResource('meetings', MeetingController::class);
     
     // Admin-only routes
     Route::middleware('admin')->group(function () {
