@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Meeting;
 use App\Models\User;
+use App\Models\Agenda;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -55,7 +56,7 @@ class MeetingController extends Controller
             'end_time' => 'required|date_format:H:i|after:start_time',
             'room_id' => 'required|exists:rooms,id',
             'attendees' => 'nullable|array',
-            'attendees.*' => 'exists:users,id',
+            'attendees.*' => 'exists:users,id'
         ]);
 
         // Check if room is available at the specified time
@@ -87,6 +88,11 @@ class MeetingController extends Controller
             'status' => 'scheduled',
             'scheduled_by' => Auth::id(),
             'room_id' => $request->room_id,
+        ]);
+
+        
+        Agenda::create([
+            'meeting_id' => $meeting->id
         ]);
 
         // Add attendees if provided

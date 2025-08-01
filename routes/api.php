@@ -5,6 +5,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\MeetingController;
+use App\Http\Controllers\AgendaController;
+use App\Http\Controllers\AgendaTopicController;
 
 // Authentication routes (no middleware required)
 Route::post('auth/login', [AuthController::class, 'login']);
@@ -34,6 +36,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('meetings/{id}/attendees', [MeetingController::class, 'removeAttendees']);
     Route::patch('meetings/{id}/status', [MeetingController::class, 'updateStatus']);
     Route::apiResource('meetings', MeetingController::class);
+    
+    // Agenda routes (authenticated users)
+    Route::get('meetings/{meetingId}/agenda', [AgendaController::class, 'getByMeeting']);
+    Route::post('meetings/{meetingId}/agenda', [AgendaController::class, 'createOrUpdate']);
+    Route::apiResource('agendas', AgendaController::class);
+    
+    // Agenda Topic routes (authenticated users)
+    Route::get('agenda-topics/my', [AgendaTopicController::class, 'myTopics']);
+    Route::get('agendas/{agendaId}/topics', [AgendaTopicController::class, 'getByAgenda']);
+    Route::post('agendas/{agendaId}/topics/reorder', [AgendaTopicController::class, 'reorder']);
+    Route::patch('agenda-topics/{id}/assign', [AgendaTopicController::class, 'assignOwner']);
+    Route::apiResource('agenda-topics', AgendaTopicController::class);
     
     // Admin-only routes
     Route::middleware('admin')->group(function () {
