@@ -45,9 +45,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Agenda Topic routes (authenticated users)
     Route::get('agenda-topics/my', [AgendaTopicController::class, 'myTopics']);
     Route::get('agendas/{agendaId}/topics', [AgendaTopicController::class, 'getByAgenda']);
+    Route::post('agendas/{agendaId}/topics', [AgendaTopicController::class, 'storeForAgenda']);
     Route::post('agendas/{agendaId}/topics/reorder', [AgendaTopicController::class, 'reorder']);
     Route::patch('agenda-topics/{id}/assign', [AgendaTopicController::class, 'assignOwner']);
-    Route::apiResource('agenda-topics', AgendaTopicController::class);
+    Route::get('agenda-topics/{id}', [AgendaTopicController::class, 'show']);
+    Route::put('agenda-topics/{id}', [AgendaTopicController::class, 'update']);
+    Route::delete('agenda-topics/{id}', [AgendaTopicController::class, 'destroy']);
     
     // Admin-only routes
     Route::middleware('admin')->group(function () {

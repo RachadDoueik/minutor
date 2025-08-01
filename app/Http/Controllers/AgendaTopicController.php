@@ -27,12 +27,11 @@ class AgendaTopicController extends Controller
     }
 
     /**
-     * Store a newly created agenda topic
+     * Store a newly created agenda topic for a specific agenda
      */
-    public function store(Request $request)
+    public function storeForAgenda(Request $request, $agendaId)
     {
         $request->validate([
-            'agenda_id' => 'required|exists:agendas,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'estimated_duration' => 'nullable|integer|min:1',
@@ -40,24 +39,26 @@ class AgendaTopicController extends Controller
         ]);
 
         // Check if user has permission to add topics to this agenda
-        $agenda = Agenda::with('meeting')->findOrFail($request->agenda_id);
+        $agenda = Agenda::with('meeting')->findOrFail($agendaId);
         if ($agenda->meeting->scheduled_by !== Auth::id() && !Auth::user()->is_admin) {
             return response()->json(['message' => 'Unauthorized to add topics to this agenda'], 403);
         }
 
         // If no order is provided, set it to the next available order
         if (!$request->has('order')) {
-            $maxOrder = AgendaTopic::where('agenda_id', $request->agenda_id)->max('order') ?? -1;
-            $request->merge(['order' => $maxOrder + 1]);
+            $maxOrder = AgendaTopic::where('agenda_id', $agendaId)->max('order') ?? -1;
+            $order = $maxOrder + 1;
+        } else {
+            $order = $request->order;
         }
 
         $topic = AgendaTopic::create([
-            'agenda_id' => $request->agenda_id,
+            'agenda_id' => $agendaId,
             'owner_id' => Auth::id(),
             'title' => $request->title,
             'description' => $request->description,
             'estimated_duration' => $request->estimated_duration,
-            'order' => $request->order,
+            'order' => $order,
         ]);
 
         return response()->json($topic->load(['agenda.meeting', 'owner']), 201);
