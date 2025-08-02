@@ -8,8 +8,6 @@ class Agenda extends Model
 {
     protected $fillable = [
         'meeting_id',
-        'title',
-        'description'
     ];
 
     public function meeting()

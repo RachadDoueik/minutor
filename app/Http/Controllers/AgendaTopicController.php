@@ -31,12 +31,6 @@ class AgendaTopicController extends Controller
      */
     public function storeForAgenda(Request $request, $agendaId)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'estimated_duration' => 'nullable|integer|min:1',
-            'order' => 'nullable|integer|min:0',
-        ]);
 
         // Check if user has permission to add topics to this agenda
         $agenda = Agenda::with('meeting')->findOrFail($agendaId);
@@ -54,7 +48,7 @@ class AgendaTopicController extends Controller
 
         $topic = AgendaTopic::create([
             'agenda_id' => $agendaId,
-            'owner_id' => Auth::id(),
+            'owner_id' => $request->owner_id,
             'title' => $request->title,
             'description' => $request->description,
             'estimated_duration' => $request->estimated_duration,
@@ -70,7 +64,7 @@ class AgendaTopicController extends Controller
     public function show($id)
     {
         $topic = AgendaTopic::with(['agenda.meeting.scheduler', 'owner'])
-                           ->findOrFail($id);
+            ->findOrFail($id);
 
         return response()->json($topic);
     }
@@ -83,9 +77,11 @@ class AgendaTopicController extends Controller
         $topic = AgendaTopic::with('agenda.meeting')->findOrFail($id);
 
         // Check if user has permission to update this topic
-        if ($topic->owner_id !== Auth::id() && 
-            $topic->agenda->meeting->scheduled_by !== Auth::id() && 
-            !Auth::user()->is_admin) {
+        if (
+            $topic->owner_id !== Auth::id() &&
+            $topic->agenda->meeting->scheduled_by !== Auth::id() &&
+            !Auth::user()->is_admin
+        ) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -109,9 +105,11 @@ class AgendaTopicController extends Controller
         $topic = AgendaTopic::with('agenda.meeting')->findOrFail($id);
 
         // Check if user has permission to delete this topic
-        if ($topic->owner_id !== Auth::id() && 
-            $topic->agenda->meeting->scheduled_by !== Auth::id() && 
-            !Auth::user()->is_admin) {
+        if (
+            $topic->owner_id !== Auth::id() &&
+            $topic->agenda->meeting->scheduled_by !== Auth::id() &&
+            !Auth::user()->is_admin
+        ) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -126,11 +124,11 @@ class AgendaTopicController extends Controller
     public function getByAgenda($agendaId)
     {
         $agenda = Agenda::findOrFail($agendaId);
-        
+
         $topics = AgendaTopic::with('owner')
-                            ->where('agenda_id', $agendaId)
-                            ->orderBy('order', 'asc')
-                            ->get();
+            ->where('agenda_id', $agendaId)
+            ->orderBy('order', 'asc')
+            ->get();
 
         return response()->json($topics);
     }
@@ -155,14 +153,14 @@ class AgendaTopicController extends Controller
 
         foreach ($request->topics as $topicData) {
             AgendaTopic::where('id', $topicData['id'])
-                      ->where('agenda_id', $agendaId)
-                      ->update(['order' => $topicData['order']]);
+                ->where('agenda_id', $agendaId)
+                ->update(['order' => $topicData['order']]);
         }
 
         $topics = AgendaTopic::with('owner')
-                            ->where('agenda_id', $agendaId)
-                            ->orderBy('order', 'asc')
-                            ->get();
+            ->where('agenda_id', $agendaId)
+            ->orderBy('order', 'asc')
+            ->get();
 
         return response()->json([
             'message' => 'Topics reordered successfully',
@@ -200,9 +198,9 @@ class AgendaTopicController extends Controller
     public function myTopics()
     {
         $topics = AgendaTopic::with(['agenda.meeting.scheduler', 'agenda.meeting.room'])
-                            ->where('owner_id', Auth::id())
-                            ->orderBy('created_at', 'desc')
-                            ->get();
+            ->where('owner_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return response()->json($topics);
     }
