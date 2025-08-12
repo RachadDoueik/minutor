@@ -19,7 +19,7 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 
 # (Optional) If you use frontend assets like Laravel Mix, run:
-RUN npm install && npm run prod
+RUN npm install && npm run dev
 
 # Stage 2: Production image with PHP and Nginx
 FROM php:8.2-fpm
