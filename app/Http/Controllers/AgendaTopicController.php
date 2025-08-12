@@ -50,9 +50,7 @@ class AgendaTopicController extends Controller
             'agenda_id' => $agendaId,
             'owner_id' => $request->owner_id,
             'title' => $request->title,
-            'description' => $request->description,
             'estimated_duration' => $request->estimated_duration,
-            'order' => $order,
         ]);
 
         return response()->json($topic->load(['agenda.meeting', 'owner']), 201);
