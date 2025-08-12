@@ -3,9 +3,9 @@ FROM php:8.2-fpm AS build
 
 # Install system dependencies for PHP and Composer
 RUN apt-get update && apt-get install -y \
-    git curl zip unzip libpng-dev libonig-dev libxml2-dev libzip-dev \
+    git curl zip unzip libpng-dev libonig-dev libxml2-dev libzip-dev libpq-dev \
     npm \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+    && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd zip
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -26,8 +26,8 @@ FROM php:8.2-fpm
 
 # Install PHP extensions needed by Laravel
 RUN apt-get update && apt-get install -y \
-    libpng-dev libonig-dev libxml2-dev libzip-dev nginx \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+    libpng-dev libonig-dev libxml2-dev libzip-dev libpq-dev nginx \
+    && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd zip
 
 # Copy PHP code and vendor from build stage
 COPY --from=build /var/www /var/www
