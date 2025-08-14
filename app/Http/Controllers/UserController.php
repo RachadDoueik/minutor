@@ -33,6 +33,28 @@ class UserController extends Controller
     }
 
     /**
+     * Display a listing of users for public access
+     */
+    public function indexPublic(Request $request)
+    {
+        $perPage = $request->get('per_page', 15);
+        $search = $request->get('search');  
+
+        $query = User::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->paginate($perPage);
+
+        return response()->json($users);
+    }
+
+    /**
      * Store a newly created user
      */
     public function store(Request $request)
@@ -92,8 +114,12 @@ class UserController extends Controller
     /**
      * Remove the specified user
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if (!$request->user() || !$request->user()->is_admin) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         $user = User::findOrFail($id);
         $user->delete();
 
