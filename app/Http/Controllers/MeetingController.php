@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Meeting;
+use App\Models\MomEntry;
 use App\Models\User;
 use App\Models\Agenda;
 use Illuminate\Http\Request;
@@ -94,6 +95,15 @@ class MeetingController extends Controller
         
         Agenda::create([
             'meeting_id' => $meeting->id
+        ]);
+
+        // Create an empty MoM entry for this meeting
+        MomEntry::create([
+            'meeting_id' => $meeting->id,
+            'title' => 'Meeting Minutes',
+            'notes' => '',
+            'summary' => null,
+            'file_path' => null,
         ]);
 
         // Add attendees if provided

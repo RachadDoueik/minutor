@@ -7,6 +7,7 @@ use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\AgendaTopicController;
+use App\Http\Controllers\ActionItemController;
 
 
 // Authentication routes (no middleware required)
@@ -57,6 +58,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('agenda-topics/{id}', [AgendaTopicController::class, 'show']);
     Route::put('agenda-topics/{id}', [AgendaTopicController::class, 'update']);
     Route::delete('agenda-topics/{id}', [AgendaTopicController::class, 'destroy']);
+
+    // Action Items routes
+    Route::apiResource('action-items', ActionItemController::class);
+    Route::patch('action-items/{id}/status', [ActionItemController::class, 'updateStatus']);
+    Route::patch('action-items/{id}/assign', [ActionItemController::class, 'assign']);
 
     
     // Admin-only routes
