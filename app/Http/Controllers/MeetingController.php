@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Agenda;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 
@@ -260,7 +261,7 @@ class MeetingController extends Controller
             'message' => 'Attendees added successfully',
             'meeting' => $meeting->load(['scheduler', 'room', 'attendees', 'agenda'])
         ]);
-    }
+    }  
 
     /**
      * Remove attendees from a meeting
@@ -371,5 +372,45 @@ class MeetingController extends Controller
             ->get();
 
         return response()->json($meetings);
+    }
+
+    /**
+     * Join a meeting: mark the authenticated user's attendee status as accepted.
+     */
+    public function joinMeeting($id)
+    {
+        $meeting = Meeting::findOrFail($id);
+        $userId = Auth::id();
+
+        // Upsert pivot: accepted + timestamps
+        $meeting->attendees()->syncWithoutDetaching([
+            $userId => [
+                'status' => 'accepted',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        ]);
+
+        return response()->json(['message' => 'Joined meeting successfully']);
+    }
+
+    /**
+     * Leave a meeting: mark the authenticated user's attendee status as invited.
+     */
+    public function leaveMeeting($id)
+    {
+        $meeting = Meeting::findOrFail($id);
+        $userId = Auth::id();
+
+        // Upsert pivot: invited + timestamps
+        $meeting->attendees()->syncWithoutDetaching([
+            $userId => [
+                'status' => 'invited',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        ]);
+
+        return response()->json(['message' => 'Left meeting successfully']);
     }
 }

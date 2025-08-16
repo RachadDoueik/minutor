@@ -33,9 +33,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('meetings/my', [MeetingController::class, 'myMeetings']);
     Route::get('meetings/upcoming', [MeetingController::class, 'upcoming']);
     Route::get('meetings/past', [MeetingController::class, 'past']);
+    Route::post('meetings/{id}/join', [MeetingController::class, 'joinMeeting']);
+    Route::post('meetings/{id}/leave', [MeetingController::class, 'leaveMeeting']);
     Route::post('meetings/{id}/attendees', [MeetingController::class, 'addAttendees']);
     Route::delete('meetings/{id}/attendees', [MeetingController::class, 'removeAttendees']);
     Route::patch('meetings/{id}/status', [MeetingController::class, 'updateStatus']);
+    Route::post('meetings/{id}/attendee', [MeetingController::class, 'addAttendeeRecord']);
     Route::apiResource('meetings', MeetingController::class);
     Route::apiResource('users', UserController::class);
 
