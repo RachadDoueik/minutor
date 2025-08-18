@@ -98,9 +98,6 @@ class ActionItemController extends Controller
         $item = ActionItem::with('momEntry.meeting')->findOrFail($id);
 
         $meeting = $item->momEntry?->meeting;
-        if ($meeting && $meeting->scheduled_by !== Auth::id() && !Auth::user()->is_admin) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
 
         $request->validate([
             'type' => 'sometimes|required|string|max:255',
