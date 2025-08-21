@@ -79,6 +79,15 @@ class UserController extends Controller
     }
 
     /**
+     * Display the specified user by id
+     */
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        return response()->json($user);
+    }
+
+    /**
      * Update the specified user
      */
     public function update(Request $request, $id)
