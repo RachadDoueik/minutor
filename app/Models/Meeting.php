@@ -47,4 +47,9 @@ class Meeting extends Model
     {
         return $this->hasMany(MomEntry::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

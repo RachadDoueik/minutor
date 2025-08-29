@@ -8,6 +8,7 @@ use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\AgendaTopicController;
 use App\Http\Controllers\ActionItemController;
+use App\Http\Controllers\CommentController;
 
 
 // Authentication routes (no middleware required)
@@ -65,6 +66,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('action-items/{id}/assign', [ActionItemController::class, 'assign']);
 
     
+    // Comments routes
+    Route::get('meetings/{meetingId}/comments', [CommentController::class, 'index']);
+    Route::post('meetings/{meetingId}/comments', [CommentController::class, 'store']);
+    Route::delete('comments/{id}', [CommentController::class, 'destroy']);
+
+
     // Admin-only routes
     Route::middleware('admin')->group(function () {
         // User management
