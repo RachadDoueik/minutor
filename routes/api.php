@@ -70,7 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('meetings/{meetingId}/comments', [CommentController::class, 'index']);
     Route::post('meetings/{meetingId}/comments', [CommentController::class, 'store']);
     Route::delete('comments/{id}', [CommentController::class, 'destroy']);
-
+    Route::put('comments/{id}', [CommentController::class, 'update']);
 
     // Admin-only routes
     Route::middleware('admin')->group(function () {

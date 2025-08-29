@@ -27,7 +27,7 @@ class CommentController extends Controller
         $meeting = Meeting::findOrFail($meetingId);
 
         $request->validate([
-            'text' => 'required|string'
+            'text' => 'required|string|max:1000'
         ]);
 
         $comment = Comment::create([
@@ -37,6 +37,25 @@ class CommentController extends Controller
         ]);
 
         return response()->json($comment->load('user'), 201);
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $comment = Comment::findOrFail($id);
+        $user = Auth::user();
+        if ($comment->user_id !== $user->id && !$user->is_admin) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'text' => 'required|string|max:1000'
+        ]);
+
+        $comment->text = $request->text;
+        $comment->save();
+
+        return response()->json($comment->load('user'));
     }
 
     /**
