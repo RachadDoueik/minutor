@@ -1,61 +1,135 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Minutor API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Meeting scheduling and collaboration backend built with Laravel and Sanctum.
 
-## About Laravel
+## Tech Stack
+- PHP (Laravel)
+- Laravel Sanctum (API auth)
+- MySQL (or compatible)
+- Pest/PHPUnit (tests)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Setup
+1) Copy env and configure DB
+- Duplicate .env.example → .env
+- Set DB credentials and APP_URL
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+2) Install dependencies
+- composer install
+- npm install (if frontend assets are used)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+3) App key, migrations, seed
+- php artisan key:generate
+- php artisan migrate
 
-## Learning Laravel
+4) Run
+- php artisan serve
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Optional (Docker): use the provided Dockerfile and docker/nginx.conf.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Auth
+- Login: POST /api/auth/login (email, password)
+- Logout: POST /api/auth/logout
+- Current user: GET /api/user
+- Sanctum bearer token must be sent with authenticated requests.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Roles & Permissions
+- Admin: can manage users, rooms, features; delete any user; manage attendees for any meeting.
+- Scheduler (meeting owner): can update/delete their meetings, manage their attendees, create action items on their meetings.
+- Attendee: can join/leave meetings.
 
-## Laravel Sponsors
+## Data Model (high-level)
+- users: is_admin, is_active
+- rooms, features, feature_room (pivot)
+- meetings: date, start_time, end_time, status, scheduled_by, room_id
+- meeting_user: pivot with status (invited/accepted/...)
+- agendas, agenda_topics
+- mom_entries (MoM)
+- action_items: linked to mom_entries; assigned_to nullable (Everyone)
+- notifications
+- comments: user_id, meeting_id, text
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## API Reference (selected)
 
-### Premium Partners
+Auth
+- POST /api/auth/login
+- POST /api/auth/logout
+- GET /api/user
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Users
+- GET /api/users
+- GET /api/users/{id}
+- POST /api/users
+- PUT/PATCH /api/users/{id}
+- DELETE /api/users/{id}
+- PUT /api/users/{id}/lock
+- PUT /api/users/{id}/unlock
 
-## Contributing
+Rooms
+- GET /api/rooms
+- GET /api/rooms/{id}
+- GET /api/rooms/available
+- (Admin) POST/PUT/PATCH/DELETE /api/rooms
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Features
+- GET /api/features
+- GET /api/features/{id}
+- (Admin) POST/PUT/PATCH/DELETE /api/features
+- (Admin) POST /api/features/{id}/attach-room
+- (Admin) POST /api/features/{id}/detach-room
 
-## Code of Conduct
+Meetings
+- GET /api/meetings
+- POST /api/meetings
+- GET /api/meetings/{id}
+- PUT/PATCH /api/meetings/{id}
+- DELETE /api/meetings/{id}
+- GET /api/meetings/my
+- GET /api/meetings/upcoming
+- GET /api/meetings/past
+- POST /api/meetings/{id}/join
+- POST /api/meetings/{id}/leave
+- POST /api/meetings/{id}/attendees
+- DELETE /api/meetings/{id}/attendees
+- PATCH /api/meetings/{id}/status
+- POST /api/meetings/{id}/attendee
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Agendas
+- GET /api/meetings/{meetingId}/agenda
+- POST /api/meetings/{meetingId}/agenda
+- CRUD /api/agendas
 
-## Security Vulnerabilities
+Agenda Topics
+- GET /api/agenda-topics/my
+- GET /api/agendas/{agendaId}/topics
+- POST /api/agendas/{agendaId}/topics
+- POST /api/agendas/{agendaId}/topics/reorder
+- PATCH /api/agenda-topics/{id}/assign
+- GET /api/agenda-topics/{id}
+- PUT /api/agenda-topics/{id}
+- DELETE /api/agenda-topics/{id}
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Minutes of Meeting (MoM) & Action Items
+- On meeting creation, an empty MoM entry is created.
+- Action Items attach to a provided MoM entry (mom_entry_id) and can be assigned to a user or Everyone (null).
 
-## License
+Action Items
+- GET/POST/GET{id}/PUT/PATCH/DELETE /api/action-items
+- PATCH /api/action-items/{id}/status
+- PATCH /api/action-items/{id}/assign
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Comments
+- GET /api/meetings/{meetingId}/comments
+- POST /api/meetings/{meetingId}/comments
+- PUT /api/comments/{id}
+- DELETE /api/comments/{id}
+
+## Conventions
+- All times in 24h format (H:i) and dates as YYYY-MM-DD.
+- Status enums include scheduled, in_progress, completed, cancelled (meetings) and open, in_progress, completed, cancelled (action items).
+
+## Testing
+- php artisan test
+
+## Troubleshooting
+- Migration class errors: ensure duplicate stub migrations are no-ops.
+- DB connection: verify .env and run migrations.
