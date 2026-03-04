@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model ActionItem {
+    id Int @id @default(autoincrement())
+    description String
+    assignedToId String @db.Uuid
+    assignedTo User @relation(fields: [assignedToId], references: [id], name: "UserAssignedItems")
+    meetingId Int
+    meeting Meeting @relation(fields: [meetingId], references: [id])
+    status ActionItemStatus @default(PENDING)
+    dueDate DateTime?
+    createdAt DateTime @default(now())
+}
+
+model RoomFeature {
+    id Int @id @default(autoincrement())
+    name String
+    description String
+    createdAt DateTime @default(now())
+    rooms Room[]
+}
+
+model Meeting {
+    id Int @id @default(autoincrement())
+    title String
+    description String
+    date DateTime
+    startTime DateTime
+    endTime DateTime
+    roomId Int
+    room Room @relation(fields: [roomId], references: [id])
+    status MeetingStatus @default(SCHEDULED)
+    createdAt DateTime @default(now())
+    meetingUrl String @unique
+    googleEventId String @unique
+    participants User[] @relation("MeetingParticipants")
+    actionItems ActionItem[]
+    agenda Agenda?
+}
+
+model Room {
+    id Int @id @default(autoincrement())
+    name String
+    floor Int
+    building String
+    capacity Int
+    createdAt DateTime @default(now())
+    features RoomFeature[]
+    meetings Meeting[]
+}
+
+model User {
+    id String @id @db.Uuid
+    username String @unique
+    email String @unique
+    createdAt DateTime @default(now())
+    active Boolean @default(true)
+    role UserRole @default(USER)
+    meetingsAttended Meeting[] @relation("MeetingParticipants")
+    actionItemsAssigned ActionItem[] @relation("UserAssignedItems")
+}
+
+model Agenda {
+    id Int @id @default(autoincrement())
+    title String
+    meetingId Int @unique
+    meeting Meeting @relation(fields: [meetingId], references: [id])
+    createdAt DateTime @default(now())
+    agendaItems AgendaItem[]
+}
+
+model AgendaItem {
+    id Int @id @default(autoincrement())
+    description String
+    agendaId Int
+    agenda Agenda @relation(fields: [agendaId], references: [id])
+    createdAt DateTime @default(now())
+    order Int
+}
+
+enum UserRole {
+    ADMIN
+    USER
+}
+
+enum MeetingStatus {
+    SCHEDULED
+    IN_PROGRESS
+    COMPLETED
+    CANCELLED
+}
+
+enum ActionItemStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  DELETED
+}
+
+enum ActionItemType {
+    TASK
+    DECISION
+    ISSUE
+}
