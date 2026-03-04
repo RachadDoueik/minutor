@@ -57,3 +57,5 @@ api/prisma/*.db-journal
 # Build artifacts
 *.js.map
 *.d.ts.map
+
+vitest.config.*.timestamp*

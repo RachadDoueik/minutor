@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@org/dto": ["libs/shared/dto/src/index.ts"]
+      "@org/dto": ["libs/shared/dto/src/index.ts"],
+      "@org/ui": ["libs/shared/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
