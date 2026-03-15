@@ -3,7 +3,7 @@ import {
   UpcomingMeetings,
   Notifications,
   Assignments,
-} from "../components/dashboard";
+} from "@org/ui";
 import type { Meeting, Notification, Assignment } from "../components/dashboard";
 
 // Sample data - in a real app, this would come from an API

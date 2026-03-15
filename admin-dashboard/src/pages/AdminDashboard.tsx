@@ -4,7 +4,7 @@ import {
   Assignment as AssignmentIcon,
   Event as EventIcon,
 } from "@mui/icons-material";
-import { PageHeader, StatCard } from "../components";
+import { PageHeader, StatCard } from "@org/ui";
 
 interface RecentActivity {
   id: string;
@@ -22,7 +22,6 @@ const recentActivities: RecentActivity[] = [
 ];
 
 const AdminDashboard = () => {
-  // Mock data - in real app would come from API
   const stats = {
     totalUsers: 1234,
     activeAssignments: 56,

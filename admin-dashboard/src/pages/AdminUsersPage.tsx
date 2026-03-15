@@ -32,7 +32,7 @@ import {
   Delete as DeleteIcon,
   Visibility as VisibilityIcon,
 } from "@mui/icons-material";
-import { PageHeader, SearchInput, StatusChip } from "../components";
+import { PageHeader, SearchInput, StatusChip } from "@org/ui";
 
 interface User {
   id: string;
@@ -44,7 +44,6 @@ interface User {
   avatar?: string;
 }
 
-// Mock data
 const mockUsers: User[] = [
   { id: "1", name: "John Doe", email: "john@example.com", role: "admin", status: "active", createdAt: "2024-01-15" },
   { id: "2", name: "Jane Smith", email: "jane@example.com", role: "instructor", status: "active", createdAt: "2024-02-20" },
@@ -136,7 +135,6 @@ const AdminUsersPage = () => {
       />
 
       <Paper elevation={0} sx={{ borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
-        {/* Search Bar */}
         <Box sx={{ p: 2, borderBottom: "1px solid", borderColor: "divider" }}>
           <SearchInput
             value={searchQuery}
@@ -145,7 +143,6 @@ const AdminUsersPage = () => {
           />
         </Box>
 
-        {/* Table */}
         <TableContainer>
           <Table>
             <TableHead>
@@ -207,7 +204,6 @@ const AdminUsersPage = () => {
         />
       </Paper>
 
-      {/* Actions Menu */}
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -229,7 +225,6 @@ const AdminUsersPage = () => {
         </MenuItem>
       </Menu>
 
-      {/* Add/Edit Dialog */}
       <Dialog open={dialogOpen} onClose={handleDialogClose} maxWidth="sm" fullWidth>
         <DialogTitle>{editMode ? "Edit User" : "Add New User"}</DialogTitle>
         <DialogContent>

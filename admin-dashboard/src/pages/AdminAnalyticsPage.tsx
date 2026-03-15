@@ -6,7 +6,6 @@ import {
   Assignment as AssignmentIcon,
 } from "@mui/icons-material";
 
-// Simple chart placeholder since we don't have a charting library
 const ChartPlaceholder = ({ title, height = 300 }: { title: string; height?: number }) => (
   <Paper
     elevation={0}
@@ -106,7 +105,6 @@ const AdminAnalyticsPage = () => {
         View system-wide analytics and statistics
       </Typography>
 
-      {/* Stats Row */}
       <Grid container spacing={3} mb={4}>
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <StatBox
@@ -146,7 +144,6 @@ const AdminAnalyticsPage = () => {
         </Grid>
       </Grid>
 
-      {/* Charts */}
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, lg: 8 }}>
           <ChartPlaceholder title="User Growth Over Time" height={350} />

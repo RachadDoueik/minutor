@@ -18,7 +18,7 @@ import {
   Visibility,
   VisibilityOff,
 } from "@mui/icons-material";
-import logoImage from "../../assets/images/logo-white-bg.png";
+import logoImage from "../assets/logo-white-bg.png";
 
 const AdminLoginPage = () => {
   const navigate = useNavigate();

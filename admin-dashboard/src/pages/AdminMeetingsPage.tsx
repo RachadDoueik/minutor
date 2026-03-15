@@ -23,7 +23,7 @@ import {
   Visibility as VisibilityIcon,
   Videocam as VideocamIcon,
 } from "@mui/icons-material";
-import { PageHeader, SearchInput, StatusChip } from "../components";
+import { PageHeader, SearchInput, StatusChip } from "@org/ui";
 
 interface Meeting {
   id: string;

@@ -1,30 +1,45 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
 import Spinner from "./components/common/Spinner/Spinner";
-import { DashboardLayout } from "./components/dashboard";
+import { DashboardLayout } from "@org/ui";
+import type { NavItem } from "@org/ui";
+import { UserProfile } from "@org/ui";
+import logoImage from "./assets/images/logo-white-bg.png";
 
-// Lazy load admin components
-const AdminLayout = lazy(() => import("./admin/layout/AdminLayout"));
-const AdminDashboard = lazy(() => import("./admin/pages/AdminDashboard"));
-const AdminUsersPage = lazy(() => import("./admin/pages/AdminUsersPage"));
-const AdminAssignmentsPage = lazy(() => import("./admin/pages/AdminAssignmentsPage"));
-const AdminMeetingsPage = lazy(() => import("./admin/pages/AdminMeetingsPage"));
-const AdminAnalyticsPage = lazy(() => import("./admin/pages/AdminAnalyticsPage"));
-const AdminSettingsPage = lazy(() => import("./admin/pages/AdminSettingsPage"));
-const AdminLoginPage = lazy(() => import("./admin/pages/AdminLoginPage"));
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const SignInPage = lazy(() => import("./pages/SignInPage"));
+const SignUpPage = lazy(() => import("./pages/SignUpPage"));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const Calendar = lazy(() => import("./pages/CalendarPage"));
+const MeetingsPage = lazy(() => import("./pages/MeetingsPage"));
+const AssignmentsPage = lazy(() => import("./pages/AssignmentsPage"));
+
+const navItems: NavItem[] = [
+  { icon: <VideocamOutlinedIcon />, path: "/home/meetings", label: "Meetings" },
+  { icon: <AssignmentTurnedInOutlinedIcon />, path: "/home/assignments", label: "Assignments" },
+  { icon: <CalendarMonthOutlinedIcon />, path: "/home/calendar", label: "Calendar" },
+];
+
+const DashboardWrapper = () => (
+  <DashboardLayout
+    navItems={navItems}
+    logoSrc={logoImage}
+    logoAlt="Minutor"
+    homePath="/home"
+    displayName="Username"
+    renderProfile={() => (
+      <UserProfile
+        username="Username"
+        onClick={() => console.log("Profile clicked")}
+      />
+    )}
+  />
+);
 
 const App = () => {
-  const LandingPage = lazy(() => import("./pages/LandingPage"));
-  const SignInPage = lazy(() => import("./pages/SignInPage"));
-  const SignUpPage = lazy(() => import("./pages/SignUpPage"));
-  const HomePage = lazy(() => import("./pages/HomePage"));
-  const Calendar = lazy(() => import("./pages/CalendarPage"));
-
-  // Wrapper for DashboardLayout without needing to pass props each time
-  const DashboardWrapper = () => (
-    <DashboardLayout username="Username" onProfileClick={() => console.log("Profile clicked")} />
-  );
-
   return (
     <BrowserRouter>
       <Suspense fallback={<Spinner />}>
@@ -32,24 +47,13 @@ const App = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          
+
           {/* Dashboard routes with shared sidebar */}
           <Route path="/home" element={<DashboardWrapper />}>
             <Route index element={<HomePage />} />
             <Route path="calendar" element={<Calendar />} />
-            <Route path="meetings" element={<AdminMeetingsPage />} />
-            <Route path="assignments" element={<AdminAssignmentsPage />} />
-          </Route>
-
-          {/* Admin routes */}
-          <Route path="/admin/login" element={<AdminLoginPage />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="users" element={<AdminUsersPage />} />
-            <Route path="assignments" element={<AdminAssignmentsPage />} />
-            <Route path="meetings" element={<AdminMeetingsPage />} />
-            <Route path="analytics" element={<AdminAnalyticsPage />} />
-            <Route path="settings" element={<AdminSettingsPage />} />
+            <Route path="meetings" element={<MeetingsPage />} />
+            <Route path="assignments" element={<AssignmentsPage />} />
           </Route>
         </Routes>
       </Suspense>

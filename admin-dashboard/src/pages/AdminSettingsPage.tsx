@@ -34,16 +34,13 @@ const AdminSettingsPage = () => {
   const [tabValue, setTabValue] = useState(0);
   const [saved, setSaved] = useState(false);
 
-  // Profile settings
   const [name, setName] = useState("Admin User");
   const [email, setEmail] = useState("admin@example.com");
 
-  // Notification settings
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
   const [weeklyDigest, setWeeklyDigest] = useState(false);
 
-  // System settings
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [registrationEnabled, setRegistrationEnabled] = useState(true);
 
@@ -79,7 +76,6 @@ const AdminSettingsPage = () => {
         </Tabs>
 
         <Box sx={{ p: 3 }}>
-          {/* Profile Settings */}
           <TabPanel value={tabValue} index={0}>
             <Grid container spacing={3}>
               <Grid size={{ xs: 12, md: 6 }}>
@@ -117,7 +113,6 @@ const AdminSettingsPage = () => {
             </Grid>
           </TabPanel>
 
-          {/* Notification Settings */}
           <TabPanel value={tabValue} index={1}>
             <Stack spacing={3}>
               <Box>
@@ -134,7 +129,6 @@ const AdminSettingsPage = () => {
                   Receive notifications about important updates via email
                 </Typography>
               </Box>
-
               <Box>
                 <FormControlLabel
                   control={
@@ -149,7 +143,6 @@ const AdminSettingsPage = () => {
                   Receive push notifications in your browser
                 </Typography>
               </Box>
-
               <Box>
                 <FormControlLabel
                   control={
@@ -167,7 +160,6 @@ const AdminSettingsPage = () => {
             </Stack>
           </TabPanel>
 
-          {/* System Settings */}
           <TabPanel value={tabValue} index={2}>
             <Stack spacing={3}>
               <Box>
@@ -184,7 +176,6 @@ const AdminSettingsPage = () => {
                   When enabled, only admins can access the system
                 </Typography>
               </Box>
-
               <Box>
                 <FormControlLabel
                   control={
@@ -199,7 +190,6 @@ const AdminSettingsPage = () => {
                   Allow new users to register
                 </Typography>
               </Box>
-
               <Alert severity="info" sx={{ mt: 2 }}>
                 System settings changes may require a restart to take effect.
               </Alert>

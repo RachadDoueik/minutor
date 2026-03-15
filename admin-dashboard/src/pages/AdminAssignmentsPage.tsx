@@ -20,7 +20,7 @@ import {
   Delete as DeleteIcon,
   Visibility as VisibilityIcon,
 } from "@mui/icons-material";
-import { PageHeader, SearchInput, StatusChip } from "../components";
+import { PageHeader, SearchInput, StatusChip } from "@org/ui";
 
 interface Assignment {
   id: string;
