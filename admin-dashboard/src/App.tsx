@@ -56,8 +56,8 @@ const App: React.FC = () => {
   return (
     <Suspense fallback={<div className="flex h-screen items-center justify-center text-lg">Loading...</div>}>
       <Routes>
-        <Route path="/login" element={<AdminLoginPage />} />
-        <Route path="/" element={<AdminLayoutWrapper />}>
+        <Route path="/" element={<AdminLoginPage />} />
+        <Route path="/dashboard" element={<AdminLayoutWrapper />}>
           <Route index element={<AdminDashboard />} />
           <Route path="users" element={<AdminUsersPage />} />
           <Route path="assignments" element={<AdminAssignmentsPage />} />
