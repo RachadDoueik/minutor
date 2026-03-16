@@ -59,11 +59,11 @@ const App: React.FC = () => {
         <Route path="/" element={<AdminLoginPage />} />
         <Route path="/dashboard" element={<AdminLayoutWrapper />}>
           <Route index element={<AdminDashboard />} />
-          <Route path="users" element={<AdminUsersPage />} />
-          <Route path="assignments" element={<AdminAssignmentsPage />} />
-          <Route path="meetings" element={<AdminMeetingsPage />} />
-          <Route path="analytics" element={<AdminAnalyticsPage />} />
-          <Route path="settings" element={<AdminSettingsPage />} />
+          <Route path="/dashboard/users" element={<AdminUsersPage />} />
+          <Route path="/dashboard/assignments" element={<AdminAssignmentsPage />} />
+          <Route path="/dashboard/meetings" element={<AdminMeetingsPage />} />
+          <Route path="/dashboard/analytics" element={<AdminAnalyticsPage />} />
+          <Route path="/dashboard/settings" element={<AdminSettingsPage />} />
         </Route>
       </Routes>
     </Suspense>
